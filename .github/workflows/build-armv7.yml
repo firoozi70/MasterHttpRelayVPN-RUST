@@ -1,0 +1,28 @@
+name: Build for ARMv7 (OpenWrt)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: armv7-unknown-linux-musleabihf
+          
+      - name: Install Cross
+        run: cargo install cross
+        
+      - name: Build for ARMv7 OpenWrt
+        run: cross build --target armv7-unknown-linux-musleabihf --release
+        
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mhrv-armv7-openwrt
+          path: target/armv7-unknown-linux-musleabihf/release/mhrv
